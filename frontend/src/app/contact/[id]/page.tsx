@@ -77,7 +77,7 @@ export default function ContactDetails() {
           </div>
         </div>
       </div>
-      <div className="h-5/6 flex ">
+      <div className="h-5/6 flex mt-4">
         <div className="w-[100px] flex flex-col font-medium ml-8 gap-4 mt-4">
           <div
             onClick={() => handleMenuClick("Activity")}
@@ -120,9 +120,9 @@ export default function ContactDetails() {
             Meeting
           </div>
         </div>
-        <div className="w-full p-4 h-full">
+        <div className="w-full p-4 h-full ">
           {selectedMenu === "Activity" && (
-            <div className="flex flex-col h-full overflow-scroll">
+            <div className="flex flex-col h-full overflow-scroll no-scrollbar">
               {loggedActivities.Email.length === 0 &&
               loggedActivities.Phone.length === 0 &&
               loggedActivities.Meeting.length === 0 ? (
@@ -169,7 +169,7 @@ export default function ContactDetails() {
             </div>
           )}
           {selectedMenu === "Email" && (
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full overflow-scroll no-scrollbar">
               <div className="flex justify-end mb-4 mr-4">
                 <Dialog>
                   <DialogTrigger asChild>
@@ -216,7 +216,7 @@ export default function ContactDetails() {
                   </DialogContent>
                 </Dialog>
               </div>
-              <div className="flex flex-col h-full overflow-scroll ">
+              <div className="flex flex-col h-full overflow-scroll no-scrollbar ">
                 {loggedActivities.Email.length === 0 ? (
                   <div className="flex justify-center items-center text-lg h-full">
                     No email logs available.
@@ -238,7 +238,7 @@ export default function ContactDetails() {
             </div>
           )}
           {selectedMenu === "Phone" && (
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full no-scrollbar">
               <div className="flex justify-end mb-4 mr-4">
                 <Dialog>
                   <DialogTrigger asChild>
@@ -285,7 +285,7 @@ export default function ContactDetails() {
                   </DialogContent>
                 </Dialog>
               </div>
-              <div className="flex flex-col h-full overflow-scroll ">
+              <div className="flex flex-col h-full overflow-scroll no-scrollbar">
                 {loggedActivities.Phone.length === 0 ? (
                   <div className="flex justify-center items-center text-lg h-full">
                     No phone logs available.
@@ -307,7 +307,7 @@ export default function ContactDetails() {
             </div>
           )}
           {selectedMenu === "Meeting" && (
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full no-scrollbar">
               <div className="flex justify-end mb-4 mr-4">
                 <Dialog>
                   <DialogTrigger asChild>
@@ -354,7 +354,7 @@ export default function ContactDetails() {
                   </DialogContent>
                 </Dialog>
               </div>
-              <div className="flex flex-col h-full overflow-scroll ">
+              <div className="flex flex-col h-full overflow-scroll no-scrollbar">
                 {loggedActivities.Meeting.length === 0 ? (
                   <div className="flex justify-center items-center text-lg h-full">
                     No meeting logs available.

@@ -31,8 +31,8 @@ const customerSegments = [
 
 export default function Dashboard() {
   return (
-    <div className="w-full h-[100px] bg-muted/40 p-8">
-      <div className="h-full bg-red-500">
+    <div className="w-full bg-muted/40 p-8">
+      <div className="h-full">
         <h1 className="text-3xl font-bold mb-8">Sales Dashboard</h1>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
