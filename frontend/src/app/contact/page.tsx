@@ -32,8 +32,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import { useRouter } from 'next/navigation';
+
 
 export default function Contact() {
+  const router = useRouter();
+
   const [contacts, setContacts] = useState([
     {
       name: "Jone Doe",
@@ -97,8 +101,10 @@ export default function Contact() {
     setFormData(contacts[index]);
   };
 
+  
+
   return (
-    <div className="p-8">
+    <div className="flex flex-col w-full p-8">
       <div className="flex justify-end mb-4">
         <Sheet>
           <SheetTrigger>
@@ -185,7 +191,7 @@ export default function Contact() {
           <TableBody>
             {contacts.map((contact, index) => (
               <TableRow key={index}>
-                <TableCell>{contact.name}</TableCell>
+                <TableCell className="hover:text-gray-500 hover:cursor-pointer hover:underline" onClick={() => router.push(`/contact/${index+1}`)}>{contact.name}</TableCell>
                 <TableCell>{contact.company}</TableCell>
                 <TableCell>{contact.phone}</TableCell>
                 <TableCell>{contact.email}</TableCell>
@@ -207,10 +213,7 @@ export default function Contact() {
                           <SheetTrigger>Edit Contact</SheetTrigger>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>View customer</DropdownMenuItem>
-                        <DropdownMenuItem>
-                          View payment details
-                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => router.push(`/contact/${index+1}`)} className="hover:cursor-pointer">View customer</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                     <SheetContent>
