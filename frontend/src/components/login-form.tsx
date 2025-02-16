@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,7 @@ export function LoginForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const response = await fetch("http://localhost:8000/api/login", {
+    const response = await fetch("http://crm-backend.rafifaz.com/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
