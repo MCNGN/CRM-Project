@@ -15,6 +15,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -44,6 +45,7 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
+import Cookies from "js-cookie";
 
 export default function Sales() {
   interface Sale {
@@ -73,10 +75,14 @@ export default function Sales() {
 
   const [editingSaleIndex, setEditingSaleIndex] = useState<number | null>(null);
 
+  const userRole = Cookies.get("role");
+
   useEffect(() => {
     const fetchSales = async () => {
       try {
-        const response = await fetch("https://crm-backend.rafifaz.com/api/sales");
+        const response = await fetch(
+          "https://crm-backend.rafifaz.com/api/sales"
+        );
         if (response.ok) {
           const data = await response.json();
           setSales(data);
@@ -90,7 +96,9 @@ export default function Sales() {
 
     const fetchContacts = async () => {
       try {
-        const response = await fetch("https://crm-backend.rafifaz.com/api/contact");
+        const response = await fetch(
+          "https://crm-backend.rafifaz.com/api/contact"
+        );
         if (response.ok) {
           const data = await response.json();
           setContacts(data);
@@ -203,6 +211,27 @@ export default function Sales() {
   const handleEditClick = (index: number) => {
     setEditingSaleIndex(index);
     setFormData(sales[index]);
+  };
+
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await fetch(
+        `https://crm-backend.rafifaz.com/api/sales/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (response.ok) {
+        setSales((prevSales) =>
+          prevSales.filter((sales) => sales.id !== id)
+        );
+      } else {
+        console.error("Failed to delete sales");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -345,6 +374,16 @@ export default function Sales() {
                           >
                             <SheetTrigger>Edit Sale</SheetTrigger>
                           </DropdownMenuItem>
+                          {userRole === "manager" && (
+                            <>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() => handleDelete(sale.id)}
+                              >
+                                Delete Contact
+                              </DropdownMenuItem>
+                            </>
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
                       <SheetContent>

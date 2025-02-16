@@ -30,6 +30,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
 export default function Contact() {
@@ -56,18 +57,22 @@ export default function Contact() {
     null
   );
 
+  const userRole = Cookies.get("role");
+
   useEffect(() => {
     const fetchContacts = async () => {
       try {
-        const response = await fetch('https://crm-backend.rafifaz.com/api/contact');
+        const response = await fetch(
+          "https://crm-backend.rafifaz.com/api/contact"
+        );
         if (response.ok) {
           const data = await response.json();
           setContacts(data);
         } else {
-          console.error('Failed to fetch contacts');
+          console.error("Failed to fetch contacts");
         }
       } catch (error) {
-        console.error('Error:', error);
+        console.error("Error:", error);
       }
     };
 
@@ -85,13 +90,16 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://crm-backend.rafifaz.com/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "https://crm-backend.rafifaz.com/api/contact",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (response.ok) {
         const newContact = await response.json();
@@ -103,10 +111,10 @@ export default function Contact() {
           email: "",
         });
       } else {
-        console.error('Failed to create contact');
+        console.error("Failed to create contact");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   };
 
@@ -114,13 +122,16 @@ export default function Contact() {
     e.preventDefault();
     if (editingContactIndex !== null) {
       try {
-        const response = await fetch(`https://crm-backend.rafifaz.com/api/contact/${contacts[editingContactIndex].id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
+        const response = await fetch(
+          `https://crm-backend.rafifaz.com/api/contact/${contacts[editingContactIndex].id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          }
+        );
 
         if (response.ok) {
           const updatedContact = await response.json();
@@ -137,10 +148,10 @@ export default function Contact() {
             email: "",
           });
         } else {
-          console.error('Failed to update contact');
+          console.error("Failed to update contact");
         }
       } catch (error) {
-        console.error('Error:', error);
+        console.error("Error:", error);
       }
     }
   };
@@ -148,6 +159,27 @@ export default function Contact() {
   const handleEditClick = (index: number) => {
     setEditingContactIndex(index);
     setFormData(contacts[index]);
+  };
+
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await fetch(
+        `https://crm-backend.rafifaz.com/api/contact/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (response.ok) {
+        setContacts((prevContacts) =>
+          prevContacts.filter((contact) => contact.id !== id)
+        );
+      } else {
+        console.error("Failed to delete contact");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -285,11 +317,23 @@ export default function Contact() {
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
-                            onClick={() => router.push(`/contact/${contact.id}`)}
+                            onClick={() =>
+                              router.push(`/contact/${contact.id}`)
+                            }
                             className="hover:cursor-pointer"
                           >
                             View customer
                           </DropdownMenuItem>
+                          {userRole === "manager" && (
+                            <>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() => handleDelete(contact.id)}
+                              >
+                                Delete Contact
+                              </DropdownMenuItem>
+                            </>
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
                       <SheetContent>
