@@ -50,7 +50,7 @@ export default function ContactDetails() {
     if (id) {
       const fetchContact = async () => {
         try {
-          const response = await fetch(`http://localhost:8000/api/contact/${id}`);
+          const response = await fetch(`https://crm-backend.rafifaz.com/api/contact/${id}`);
           if (response.ok) {
             const data = await response.json();
             setContact(data);
@@ -64,7 +64,7 @@ export default function ContactDetails() {
 
       const fetchLogs = async (type: "Email" | "Phone" | "Meeting") => {
         try {
-          const response = await fetch(`http://localhost:8000/api/activity/${id}/${type}`);
+          const response = await fetch(`https://crm-backend.rafifaz.com/api/activity/${id}/${type}`);
           if (response.ok) {
             const data = await response.json();
             setLoggedActivities((prevActivities) => ({
@@ -98,7 +98,7 @@ export default function ContactDetails() {
   const handleSaveLog = async (activityType: "Email" | "Phone" | "Meeting") => {
     const logData = { title: logTitle, message: logMessage, type: activityType, contact_id: id };
     try {
-      const response = await fetch(`http://localhost:8000/api/activity`, {
+      const response = await fetch(`https://crm-backend.rafifaz.com/api/activity`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

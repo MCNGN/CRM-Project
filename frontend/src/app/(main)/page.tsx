@@ -65,7 +65,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchSalesData = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/data");
+        const response = await fetch("https://crm-backend.rafifaz.com/api/data");
         if (response.ok) {
           const data = await response.json();
           console.log(data);

@@ -59,7 +59,7 @@ export default function Contact() {
   useEffect(() => {
     const fetchContacts = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/contact');
+        const response = await fetch('https://crm-backend.rafifaz.com/api/contact');
         if (response.ok) {
           const data = await response.json();
           setContacts(data);
@@ -85,7 +85,7 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8000/api/contact', {
+      const response = await fetch('https://crm-backend.rafifaz.com/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -114,7 +114,7 @@ export default function Contact() {
     e.preventDefault();
     if (editingContactIndex !== null) {
       try {
-        const response = await fetch(`http://localhost:8000/api/contact/${contacts[editingContactIndex].id}`, {
+        const response = await fetch(`https://crm-backend.rafifaz.com/api/contact/${contacts[editingContactIndex].id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

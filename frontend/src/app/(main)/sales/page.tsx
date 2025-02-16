@@ -76,7 +76,7 @@ export default function Sales() {
   useEffect(() => {
     const fetchSales = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/sales");
+        const response = await fetch("https://crm-backend.rafifaz.com/api/sales");
         if (response.ok) {
           const data = await response.json();
           setSales(data);
@@ -90,7 +90,7 @@ export default function Sales() {
 
     const fetchContacts = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/contact");
+        const response = await fetch("https://crm-backend.rafifaz.com/api/contact");
         if (response.ok) {
           const data = await response.json();
           setContacts(data);
@@ -134,13 +134,16 @@ export default function Sales() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8000/api/sales", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "https://crm-backend.rafifaz.com/api/sales",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (response.ok) {
         const newSale = await response.json();
@@ -164,7 +167,7 @@ export default function Sales() {
     if (editingSaleIndex !== null) {
       try {
         const response = await fetch(
-          `http://localhost:8000/api/sales/${sales[editingSaleIndex].id}`,
+          `https://crm-backend.rafifaz.com/api/sales/${sales[editingSaleIndex].id}`,
           {
             method: "PUT",
             headers: {
