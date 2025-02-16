@@ -1,5 +1,6 @@
-import { BookUser, Home, ShoppingBag } from "lucide-react";
+"use client";
 
+import { BookUser, Home, ShoppingBag, LogOutIcon } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -9,7 +10,10 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarFooter,
 } from "@/components/ui/sidebar";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 // Menu items.
 const items = [
@@ -31,6 +35,13 @@ const items = [
 ];
 
 export function AppSidebar() {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    Cookies.remove("isLogin");
+    router.push("/");
+  };
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -52,6 +63,16 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton onClick={handleLogout}>
+              <LogOutIcon />
+              <span>Log Out</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 }

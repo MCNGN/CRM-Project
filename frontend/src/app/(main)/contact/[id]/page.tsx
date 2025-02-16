@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Dialog,
   DialogContent,
   DialogClose,
-  //   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -18,9 +18,19 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function ContactDetails() {
+  const { id } = useParams();
+
+  const [contact, setContact] = useState({
+    name: "",
+    company: "",
+    phone: "",
+    email: "",
+  });
+
   const [selectedMenu, setSelectedMenu] = useState("Activity");
   const [logTitle, setLogTitle] = useState("");
   const [logMessage, setLogMessage] = useState("");
+
   interface Log {
     title: string;
     message: string;
@@ -36,6 +46,46 @@ export default function ContactDetails() {
     Meeting: [],
   });
 
+  useEffect(() => {
+    if (id) {
+      const fetchContact = async () => {
+        try {
+          const response = await fetch(`http://localhost:8000/api/contact/${id}`);
+          if (response.ok) {
+            const data = await response.json();
+            setContact(data);
+          } else {
+            console.error('Failed to fetch contact');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
+
+      const fetchLogs = async (type: "Email" | "Phone" | "Meeting") => {
+        try {
+          const response = await fetch(`http://localhost:8000/api/activity/${id}/${type}`);
+          if (response.ok) {
+            const data = await response.json();
+            setLoggedActivities((prevActivities) => ({
+              ...prevActivities,
+              [type]: data,
+            }));
+          } else {
+            console.error(`Failed to fetch ${type} logs`);
+          }
+        } catch (error) {
+          console.error(`Error fetching ${type} logs:`, error);
+        }
+      };
+
+      fetchContact();
+      fetchLogs("Email");
+      fetchLogs("Phone");
+      fetchLogs("Meeting");
+    }
+  }, [id]);
+
   const handleMenuClick = (menu: string) => {
     setSelectedMenu(menu);
   };
@@ -45,16 +95,31 @@ export default function ContactDetails() {
     // Add your logging logic here
   };
 
-  const handleSaveLog = (activityType: "Email" | "Phone" | "Meeting") => {
-    setLoggedActivities((prevActivities) => ({
-      ...prevActivities,
-      [activityType]: [
-        ...prevActivities[activityType],
-        { title: logTitle, message: logMessage },
-      ],
-    }));
-    setLogTitle("");
-    setLogMessage("");
+  const handleSaveLog = async (activityType: "Email" | "Phone" | "Meeting") => {
+    const logData = { title: logTitle, message: logMessage, type: activityType, contact_id: id };
+    try {
+      const response = await fetch(`http://localhost:8000/api/activity`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(logData),
+      });
+
+      if (response.ok) {
+        const newLog = await response.json();
+        setLoggedActivities((prevActivities) => ({
+          ...prevActivities,
+          [activityType]: [...prevActivities[activityType], newLog],
+        }));
+        setLogTitle("");
+        setLogMessage("");
+      } else {
+        console.error('Failed to save log');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   return (
@@ -68,11 +133,12 @@ export default function ContactDetails() {
             </Avatar>
           </div>
           <div>
-            <div className="text-3xl font-black">Geraldine</div>
-            <div className="text-xl font-bold">KAI Oanjang</div>
+            <div className="text-3xl font-black">{contact.name}</div>
+            <div className="text-xl font-bold">{contact.company}</div>
             <div className="flex text-sm font-medium">
-              <div>+628896412 </div>
-              <div> - aiodhad@gmail.com</div>
+              <div>{contact.phone}</div>
+              <div className="mx-1">•</div>
+              <div>{contact.email}</div>
             </div>
           </div>
         </div>
@@ -242,7 +308,7 @@ export default function ContactDetails() {
               <div className="flex justify-end mb-4 mr-4">
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button onClick={() => handleLogActivity("Email")}>
+                    <Button onClick={() => handleLogActivity("Phone")}>
                       Create Log Phone
                     </Button>
                   </DialogTrigger>
@@ -311,7 +377,7 @@ export default function ContactDetails() {
               <div className="flex justify-end mb-4 mr-4">
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button onClick={() => handleLogActivity("Email")}>
+                    <Button onClick={() => handleLogActivity("Meeting")}>
                       Create Log Meeting
                     </Button>
                   </DialogTrigger>
