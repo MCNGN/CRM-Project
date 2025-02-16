@@ -20,7 +20,7 @@ export function LoginForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const response = await fetch("http://crm-backend.rafifaz.com/api/login", {
+    const response = await fetch("https://crm-backend.rafifaz.com/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
